@@ -1,0 +1,53 @@
+# Set Zsh options
+setopt HIST_IGNORE_DUPS       # Ignore duplicate entries in history
+setopt HIST_IGNORE_ALL_DUPS    # Ignore all previous duplicates
+setopt HIST_FIND_NO_DUPS       # Don't show duplicates when searching
+setopt SHARE_HISTORY           # Share history across sessions
+setopt INC_APPEND_HISTORY      # Append to history immediately
+setopt AUTO_CD                 # Change directories without `cd`
+setopt MULTIOS                 # Allow multiple redirections (e.g., `cat * >> file`)
+setopt EXTENDED_GLOB           # Enable extended globbing (e.g., `ls **/*.txt`)
+
+# History settings
+export HISTSIZE=10000
+export SAVEHIST=10000
+export HISTFILE=~/.zsh_history
+
+# Aliases
+alias cat="bat -p"
+alias v="nvim"
+alias vim="nvim"
+alias cl="clear"
+# ---------------------------------------------------------------- 
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+# ---------------------------------------------------------------- 
+alias l="eza -l --icons --git -a"
+alias lt="eza --tree --level=2 --long --icons --git"
+alias ltree="eza --tree --level=2  --icons --git"
+# ---------------------------------------------------------------- 
+cx() { cd "$@" && l; }
+fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
+f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy }
+fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)" }
+
+# Keybindings
+bindkey '^e' autosuggest-accept
+bindkey '^p' up-line-or-search
+bindkey '^n' down-line-or-search
+
+# fzf integration
+export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
+
+export KEYTIMEOUT=1                   # Improve responsiveness of vim-mode
+
+# tmux integration
+if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
+  tmux new-session -A -s main
+fi
+
+source /usr/share/zsh/plugins/fzf/fzf.plugin.zsh
+eval "$(zoxide init zsh)"
