@@ -48,21 +48,15 @@ COPY ./lua /home/$UNAME/.config/nvim/lua
 
 RUN chown -R peter:peter /home/$UNAME
 
-# Set default login as peter
-USER $UNAME
-
 # Install Zsh with plugins
 COPY ./zsh /tmp/zsh
-RUN sh /tmp/zsh/zsh-in-docker.sh -t https://github.com/denysdovhan/spaceship-prompt
+RUN env HOME=/home/$UNAME sh /tmp/zsh/zsh-in-docker.sh -t https://github.com/denysdovhan/spaceship-prompt
 
 # working directory
 WORKDIR /home/$UNAME/projects
 
 # Replace existing TERM setting in .zshrc if it exists
-# RUN sed -i 's|^export TERM=xterm|export TERM=xterm-256color|' /home/peter/.zshrc || true
 ENV TERM xterm-256color
-
-USER root
 
 # Modify sudoers file to replace $UNAME ALL=(ALL) NOPASSWD:ALL with $UNAME ALL=(ALL) ALL
 RUN sed -i "s|$UNAME ALL=(ALL) NOPASSWD:ALL|$UNAME ALL=(ALL) ALL|" /etc/sudoers
