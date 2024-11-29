@@ -8,6 +8,9 @@ setopt AUTO_CD                 # Change directories without `cd`
 setopt MULTIOS                 # Allow multiple redirections (e.g., `cat * >> file`)
 setopt EXTENDED_GLOB           # Enable extended globbing (e.g., `ls **/*.txt`)
 
+# zsh-vi-mode: Do the initialization when the script is sourced (i.e. Initialize instantly)
+ZVM_INIT_MODE=sourcing
+
 # History settings
 export HISTSIZE=10000
 export SAVEHIST=10000
@@ -31,8 +34,28 @@ alias ltree="eza --tree --level=2  --icons --git"
 # ---------------------------------------------------------------- 
 cx() { cd "$@" && l; }
 fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
-f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy }
 fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)" }
+# ---------------------------------------------------------------- 
+# git aliases 
+# Function to remove a file from Git history
+git_remove_file_history() {
+  if [ -z "$1" ]; then
+    echo "Usage: git_remove_file_history <path_to_file>"
+    return 1
+  fi
+
+  echo "Rewriting Git history to remove file: $1"
+  git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch $1" HEAD
+
+  echo "File '$1' has been removed from Git history."
+  echo "Next steps:"
+  echo "1. Clean up your Git repository:"
+  echo "   git reflog expire --expire=now --all && git gc --prune=now --aggressive"
+  echo "2. If this repository is shared, you MUST force-push the changes:"
+  echo "   git push origin --force --all"
+  echo "   git push origin --force --tags"
+}
+
 
 # Keybindings
 bindkey '^e' autosuggest-accept
@@ -41,6 +64,7 @@ bindkey '^n' down-line-or-search
 
 # fzf integration
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
+source <(fzf --zsh)
 
 export KEYTIMEOUT=1                   # Improve responsiveness of vim-mode
 
@@ -49,5 +73,5 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
   tmux new-session -A -s main
 fi
 
-source /usr/share/zsh/plugins/fzf/fzf.plugin.zsh
+# source /usr/share/zsh/plugins/fzf/fzf.plugin.zsh
 eval "$(zoxide init zsh)"
