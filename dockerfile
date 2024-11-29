@@ -35,7 +35,7 @@ RUN env HOME=/home/$UNAME sh /tmp/zsh/zsh-in-docker.sh -t https://github.com/den
 WORKDIR /home/$UNAME/projects
 
 # Replace existing TERM setting in .zshrc if it exists
-ENV TERM xterm-256color
+ENV TERM=xterm-256color
 
 # Modify sudoers file to replace $UNAME ALL=(ALL) NOPASSWD:ALL with $UNAME ALL=(ALL) ALL
 RUN sed -i "s|$UNAME ALL=(ALL) NOPASSWD:ALL|$UNAME ALL=(ALL) ALL|" /etc/sudoers
