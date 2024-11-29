@@ -148,7 +148,7 @@ ZSH_THEME="${_THEME}"
 plugins=($_PLUGINS)
 
 EOM
-    printf "$ZSHRC_APPEND"
+    printf "$ZSHRC_APPEND\n"
     printf "\nsource \$ZSH/oh-my-zsh.sh\n"
 }
 
@@ -171,6 +171,7 @@ cd /tmp
 # Install On-My-Zsh
 if [ ! -d "$HOME"/.oh-my-zsh ]; then
     sh -c "$(curl https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" "" --unattended
+    sed -i '/# List directory contents/,$d' ~/.oh-my-zsh/lib/directories.zsh
 fi
 
 # Generate plugin list
