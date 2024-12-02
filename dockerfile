@@ -34,6 +34,11 @@ RUN env HOME=/home/$UNAME sh /tmp/zsh/zsh-in-docker.sh -t https://github.com/den
 # working directory
 WORKDIR /home/$UNAME/projects
 
+# Run Neovim in headless mode to sync LazyVim plugins, then quit Neovim; 
+# after that, install tmux plugins using TPM (tmux plugin manager)
+RUN su - $UNAME -c "nvim --headless '+Lazy! sync' +qa" && \
+    su - $UNAME -c "/home/$UNAME/.tmux/plugins/tpm/bin/install_plugins"
+
 # Replace existing TERM setting in .zshrc if it exists
 ENV TERM=xterm-256color
 

@@ -62,10 +62,6 @@ bindkey '^e' autosuggest-accept
 bindkey '^p' up-line-or-search
 bindkey '^n' down-line-or-search
 
-# fzf integration
-export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
-source <(fzf --zsh)
-
 export KEYTIMEOUT=1                   # Improve responsiveness of vim-mode
 
 # tmux integration

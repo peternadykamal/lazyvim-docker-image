@@ -150,6 +150,12 @@ plugins=($_PLUGINS)
 EOM
     printf "$ZSHRC_APPEND\n"
     printf "\nsource \$ZSH/oh-my-zsh.sh\n"
+    cat <<EOM
+# fzf integration
+export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git/*'"
+source <(fzf --zsh)
+
+EOM
 }
 
 powerline10k_config() {
